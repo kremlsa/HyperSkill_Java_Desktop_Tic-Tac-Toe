@@ -21,12 +21,15 @@ public class TController {
     public String makeMove(String buttonKey) {
         String move = game.getCurrentMove();
         this.game.makeMove(buttonKey);
+        return game.getCurrentMove();
+    }
+
+    public void changeMove() {
         game.changeMove();
-        return move;
     }
 
     public String robotMove() {
-        return "ButtonA1";
+        return game.computerMove();
     }
 
     public String getLetter() {

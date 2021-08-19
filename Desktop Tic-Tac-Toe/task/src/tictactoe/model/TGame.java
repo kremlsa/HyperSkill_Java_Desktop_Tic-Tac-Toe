@@ -28,22 +28,22 @@ public class TGame {
     }
 
     public boolean isPlayerWin(Map<String, String> field, String letter) {
-        if (gameField.get("ButtonA3").equals(letter) && gameField.get("ButtonB3").equals(letter)
-                                && gameField.get("ButtonC3").equals(letter)) return true;
-        if (gameField.get("ButtonA2").equals(letter) && gameField.get("ButtonB2").equals(letter)
-                && gameField.get("ButtonC2").equals(letter)) return true;
-        if (gameField.get("ButtonA1").equals(letter) && gameField.get("ButtonB1").equals(letter)
-                && gameField.get("ButtonC1").equals(letter)) return true;
-        if (gameField.get("ButtonA3").equals(letter) && gameField.get("ButtonA2").equals(letter)
-                && gameField.get("ButtonA1").equals(letter)) return true;
-        if (gameField.get("ButtonB3").equals(letter) && gameField.get("ButtonB2").equals(letter)
-                && gameField.get("ButtonB1").equals(letter)) return true;
-        if (gameField.get("ButtonC3").equals(letter) && gameField.get("ButtonC2").equals(letter)
-                && gameField.get("ButtonC1").equals(letter)) return true;
-        if (gameField.get("ButtonA3").equals(letter) && gameField.get("ButtonB2").equals(letter)
-                && gameField.get("ButtonC1").equals(letter)) return true;
-        if (gameField.get("ButtonA1").equals(letter) && gameField.get("ButtonB2").equals(letter)
-                && gameField.get("ButtonC3").equals(letter)) return true;
+        if (field.get("ButtonA3").equals(letter) && field.get("ButtonB3").equals(letter)
+                                && field.get("ButtonC3").equals(letter)) return true;
+        if (field.get("ButtonA2").equals(letter) && field.get("ButtonB2").equals(letter)
+                && field.get("ButtonC2").equals(letter)) return true;
+        if (field.get("ButtonA1").equals(letter) && field.get("ButtonB1").equals(letter)
+                && field.get("ButtonC1").equals(letter)) return true;
+        if (field.get("ButtonA3").equals(letter) && field.get("ButtonA2").equals(letter)
+                && field.get("ButtonA1").equals(letter)) return true;
+        if (field.get("ButtonB3").equals(letter) && field.get("ButtonB2").equals(letter)
+                && field.get("ButtonB1").equals(letter)) return true;
+        if (field.get("ButtonC3").equals(letter) && field.get("ButtonC2").equals(letter)
+                && field.get("ButtonC1").equals(letter)) return true;
+        if (field.get("ButtonA3").equals(letter) && field.get("ButtonB2").equals(letter)
+                && field.get("ButtonC1").equals(letter)) return true;
+        if (field.get("ButtonA1").equals(letter) && field.get("ButtonB2").equals(letter)
+                && field.get("ButtonC3").equals(letter)) return true;
         return false;
     }
 
@@ -60,10 +60,14 @@ public class TGame {
     }
 
     public List<String> availableMoves(Map<String, String> field) {
-        return field.values()
-                .stream()
-                .filter(s -> s.equals(" "))
-                .collect(Collectors.toList());
+        List<String> moves = new ArrayList<>();
+        for (Map.Entry<String, String> entry : field.entrySet())
+        {
+            if(entry.getValue().equals(" ")) {
+                moves.add(entry.getKey());
+            }
+        }
+        return moves;
     }
 
     public void changeMove() {
@@ -86,6 +90,46 @@ public class TGame {
         return "Game in progress";
     }
 
+    public Map<String, String> deepCopy(Map<String, String> original) {
+        Map<String, String> copy = new LinkedHashMap<String, String>();
+        for (Map.Entry<String, String> entry : original.entrySet())
+        {
+            copy.put(entry.getKey(), entry.getValue());
+        }
+        return copy;
+    }
+
+    public String computerMove() {
+        String move = calcMove();
+        gameField.put(move, this.currentMove);
+        return move;
+    }
+
+    public String calcMove() {
+        Random random = new Random();
+        String letterInv;
+        //Check if Computer win next move
+        Map<String, String> cloneField;
+        List<String> moves = availableMoves(gameField);
+        //Check if Computer win next move
+        for (String move : moves) {
+            cloneField = deepCopy(gameField);
+            cloneField.put(move, currentMove);
+            if (isPlayerWin(cloneField, currentMove)) {
+                return move;
+            }
+        }
+        letterInv = currentMove.equals("X") ? "O" : "X";
+        for (String move : moves) {
+            cloneField = deepCopy(gameField);
+            cloneField.put(move, letterInv);
+            if (isPlayerWin(cloneField, letterInv)) {
+                return move;
+            }
+        }
+        moves.forEach(System.out::println);
+        return moves.get(random.nextInt(moves.size()));
+    }
 
 
 }

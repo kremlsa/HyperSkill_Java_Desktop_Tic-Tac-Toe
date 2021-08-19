@@ -107,6 +107,7 @@ public class TicTacToe extends JFrame {
     public void nextMove() {
         if (currentMove.equals("Robot")) {
             buttonsMap.get(tc.robotMove()).setText(tc.getLetter());
+            tc.changeMove();
             changeMove();
         }
     }
@@ -123,6 +124,7 @@ public class TicTacToe extends JFrame {
         if (!tc.getStatus().equals("GameOver") && currentMove.equals("Human")) {
             if (buttonsMap.get(buttonKey).getText().equals(" ")) {
                 buttonsMap.get(buttonKey).setText(tc.makeMove(buttonKey));
+                tc.changeMove();
             }
         }
         setStatusLabel();
