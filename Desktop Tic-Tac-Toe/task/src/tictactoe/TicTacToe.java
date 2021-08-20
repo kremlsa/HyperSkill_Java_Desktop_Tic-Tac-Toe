@@ -54,22 +54,29 @@ public class TicTacToe extends JFrame {
     public void resetGame() {
         for (Map.Entry<String, JButton> entry : buttonsMap.entrySet()) {
             entry.getValue().setText(" ");
+            entry.getValue().setEnabled(true);
         }
         tc.resetGame();
         playerOneButton.setText("Human");
         playerTwoButton.setText("Human");
         playerOneButton.setEnabled(true);
         playerTwoButton.setEnabled(true);
-        resetButton.setText("Start");
         statusLabel.setText("Game is not started");
         currentMove = playerOneButton.getText();
     }
 
     public void startGame() {
         resetButton.setText("Reset");
+        System.out.println(resetButton.getText());
+        for (Map.Entry<String, JButton> entry : buttonsMap.entrySet()) {
+            entry.getValue().setText(" ");
+            entry.getValue().setEnabled(true);
+        }
+        tc.startGame();
         playerOneButton.setEnabled(false);
         playerTwoButton.setEnabled(false);
         currentMove = playerOneButton.getText();
+        setStatusLabel();
         nextMove();
     }
 
@@ -80,6 +87,7 @@ public class TicTacToe extends JFrame {
             entry.getValue().setFont(new Font("Arial", Font.BOLD, 40));
             entry.getValue().setFocusPainted(false);
             entry.getValue().addActionListener(buttonListener);
+            entry.getValue().setEnabled(false);
             fieldGrid.add(entry.getValue());
         }
         toolPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
@@ -101,7 +109,7 @@ public class TicTacToe extends JFrame {
         toolPanel.add(playerOneButton);
         toolPanel.add(resetButton);
         toolPanel.add(playerTwoButton);
-        resetGame();
+        tc.resetGame();
     }
 
     public void nextMove() {
@@ -109,34 +117,44 @@ public class TicTacToe extends JFrame {
             buttonsMap.get(tc.robotMove()).setText(tc.getLetter());
             tc.changeMove();
             changeMove();
+            nextMove();
         }
     }
 
     public void changeMove() {
         currentMove = currentMove.equals(playerOneButton.getText()) ?
                 playerTwoButton.getText() : playerOneButton.getText();
+        System.out.println("current move " + currentMove);
         setStatusLabel();
     }
 
 
 
     public void setButtonText(String buttonKey) {
-        if (!tc.getStatus().equals("GameOver") && currentMove.equals("Human")) {
+        if (tc.getStatus().equals("Game in progress") && currentMove.equals("Human")) {
             if (buttonsMap.get(buttonKey).getText().equals(" ")) {
                 buttonsMap.get(buttonKey).setText(tc.makeMove(buttonKey));
                 tc.changeMove();
+                setStatusLabel();
+                changeMove();
+                nextMove();
             }
         }
-        setStatusLabel();
-        changeMove();
-        nextMove();
     }
 
     public void setStatusLabel() {
         String status = tc.getStatus();
-        if (!status.equals("GameOver")) {
-            statusLabel.setText(status);
+        statusLabel.setText(status);
+        if (statusLabel.getText().equals("X wins") || statusLabel.getText().equals("O wins")
+                || statusLabel.getText().equals("Draw")) {
+            for (Map.Entry<String, JButton> entry : buttonsMap.entrySet()) {
+                entry.getValue().setEnabled(false);
+            }
         }
+
+//        if (!status.equals("GameOver")) {
+//            statusLabel.setText(status);
+//        }
     }
 
     public void changePlayer(String player) {
@@ -165,8 +183,10 @@ public class TicTacToe extends JFrame {
         public void actionPerformed(ActionEvent e) {
             String status = ((JButton) e.getSource()).getText();
             if (status.equals("Start")) {
+                resetButton.setText("Reset");
                 startGame();
             } else {
+                resetButton.setText("Start");
                 resetGame();
             }
         }

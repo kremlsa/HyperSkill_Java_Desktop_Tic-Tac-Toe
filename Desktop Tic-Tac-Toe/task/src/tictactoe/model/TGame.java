@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 public class TGame {
     String currentMove = "X";
     boolean isGameOver = false;
+    String gameStatus = "Game is not started";
     Map<String, String> gameField = new LinkedHashMap<String, String>() {{
         put("ButtonA1", " ");
         put("ButtonA2", " ");
@@ -70,6 +71,8 @@ public class TGame {
         return moves;
     }
 
+    public void startGame() { this.gameStatus = "Game in progress";}
+
     public void changeMove() {
         this.currentMove = this.currentMove.equals("X") ? "O" : "X";
     }
@@ -77,15 +80,21 @@ public class TGame {
     public String getStatus() {
         if (isPlayerWin(this.gameField, "X")) {
             isGameOver = true;
+            this.gameStatus = "X wins";
             return "X wins";
         }
         if (isPlayerWin(this.gameField, "O")) {
             isGameOver = true;
+            this.gameStatus = "O wins";
             return "O wins";
         }
         if (isDraw(this.gameField)) {
             isGameOver = true;
+            this.gameStatus = "Draw";
             return "Draw";
+        }
+        if (gameStatus.equals("Game is not started")) {
+            return "Game is not started";
         }
         return "Game in progress";
     }
@@ -127,7 +136,6 @@ public class TGame {
                 return move;
             }
         }
-        moves.forEach(System.out::println);
         return moves.get(random.nextInt(moves.size()));
     }
 

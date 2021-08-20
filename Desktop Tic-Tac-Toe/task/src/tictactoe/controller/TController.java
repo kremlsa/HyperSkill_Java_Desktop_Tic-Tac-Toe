@@ -7,12 +7,15 @@ public class TController {
     TGame game;
 
     public String getStatus() {
-        if (game.isGameOver()) {
-            return "GameOver";
-        } else {
-            return this.game.getStatus();
-        }
+        return game.getStatus();
+//        if (game.isGameOver()) {
+//            return "GameOver";
+//        } else {
+//            return this.game.getStatus();
+//        }
     }
+
+    public void startGame() { this.game.startGame();}
 
     public void resetGame() {
         this.game = new TGame();
