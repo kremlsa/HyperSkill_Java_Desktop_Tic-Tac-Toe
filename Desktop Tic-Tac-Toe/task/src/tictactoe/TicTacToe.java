@@ -27,6 +27,7 @@ public class TicTacToe extends JFrame {
     JPanel fieldGrid = new JPanel();
     JPanel statusPanel = new JPanel();
     JPanel toolPanel = new JPanel();
+    JMenuBar menuPanel = new JMenuBar();
     JLabel statusLabel = new JLabel();
     JButton resetButton = new JButton();
     JButton playerOneButton = new JButton();
@@ -34,8 +35,11 @@ public class TicTacToe extends JFrame {
     ButtonListener buttonListener = new ButtonListener();
     PlayerButtonListener playerButtonListener = new PlayerButtonListener();
     ResetListener resetListener = new ResetListener();
+    MenuListener menuListener = new MenuListener();
     TController tc = new TController();
     String currentMove;
+    JMenu menuGame;
+    JMenuItem menuHumanHuman, menuHumanRobot, menuRobotHuman, menuRobotRobot, menuExit;
 
     public TicTacToe() {
         super("Tic Tac Toe");
@@ -45,10 +49,40 @@ public class TicTacToe extends JFrame {
         GridLayout layoutField = new GridLayout(3, 3, 0, 0);
         fieldGrid.setLayout(layoutField);
         initGameField();
+        initMenu();
+        menuPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
+        getContentPane().add(menuPanel);
         getContentPane().add(toolPanel);
         getContentPane().add(fieldGrid);
         getContentPane().add(statusPanel);
         setVisible(true);
+    }
+
+    public void initMenu() {
+        menuGame = new JMenu("Game");
+        menuGame.setName("MenuGame");
+        menuPanel.add(menuGame);
+        menuHumanHuman= new JMenuItem("Human vs Human");
+        menuHumanHuman.setName("MenuHumanHuman");
+        menuHumanHuman.addActionListener(menuListener);
+        menuHumanRobot= new JMenuItem("Human vs Robot");
+        menuHumanRobot.setName("MenuHumanRobot");
+        menuHumanRobot.addActionListener(menuListener);
+        menuRobotHuman= new JMenuItem("Robot vs Human");
+        menuRobotHuman.setName("MenuRobotHuman");
+        menuRobotHuman.addActionListener(menuListener);
+        menuRobotRobot= new JMenuItem("Robot vs Robot");
+        menuRobotRobot.setName("MenuRobotRobot");
+        menuRobotRobot.addActionListener(menuListener);
+        menuExit = new JMenuItem("Exit");
+        menuExit.setName("MenuExit");
+        menuExit.addActionListener(menuListener);
+        menuGame.add(menuHumanHuman);
+        menuGame.add(menuHumanRobot);
+        menuGame.add(menuRobotHuman);
+        menuGame.add(menuRobotRobot);
+        menuGame.addSeparator();
+        menuGame.add(menuExit);
     }
 
     public void resetGame() {
@@ -168,6 +202,46 @@ public class TicTacToe extends JFrame {
         }
     }
 
+    public void menuHandler(String option) {
+        switch (option) {
+            case "MenuHumanHuman":
+                if (!statusLabel.getText().equals("Game in progress")) {
+                    resetGame();
+                    playerOneButton.setText("Human");
+                    playerTwoButton.setText("Human");
+                    startGame();
+                }
+                break;
+            case "MenuHumanRobot":
+                if (!statusLabel.getText().equals("Game in progress")) {
+                    resetGame();
+                    playerOneButton.setText("Human");
+                    playerTwoButton.setText("Robot");
+                    startGame();
+                }
+                break;
+            case "MenuRobotHuman":
+                if (!statusLabel.getText().equals("Game in progress")) {
+                    resetGame();
+                    playerOneButton.setText("Robot");
+                    playerTwoButton.setText("Human");
+                    startGame();
+                }
+                break;
+            case "MenuRobotRobot":
+                if (!statusLabel.getText().equals("Game in progress")) {
+                    resetGame();
+                    playerOneButton.setText("Robot");
+                    playerTwoButton.setText("Robot");
+                    startGame();
+                }
+                break;
+            case "MenuExit":
+                System.exit(0);
+                break;
+        }
+    }
+
     class ButtonListener implements ActionListener {
 
         @Override
@@ -197,6 +271,14 @@ public class TicTacToe extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             changePlayer(((JButton) e.getSource()).getName());
+        }
+    }
+
+    class MenuListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            menuHandler(((JMenuItem) e.getSource()).getName());
         }
     }
 }
