@@ -37,7 +37,7 @@ public class TicTacToe extends JFrame {
     ResetListener resetListener = new ResetListener();
     MenuListener menuListener = new MenuListener();
     TController tc = new TController();
-    String currentMove;
+//    String currentMove;
     JMenu menuGame;
     JMenuItem menuHumanHuman, menuHumanRobot, menuRobotHuman, menuRobotRobot, menuExit;
 
@@ -96,7 +96,8 @@ public class TicTacToe extends JFrame {
         playerOneButton.setEnabled(true);
         playerTwoButton.setEnabled(true);
         statusLabel.setText("Game is not started");
-        currentMove = playerOneButton.getText();
+//        currentMove = playerOneButton.getText();
+        tc.setPlayers(playerOneButton.getText(), playerTwoButton.getText());
     }
 
     public void startGame() {
@@ -109,7 +110,8 @@ public class TicTacToe extends JFrame {
         tc.startGame();
         playerOneButton.setEnabled(false);
         playerTwoButton.setEnabled(false);
-        currentMove = playerOneButton.getText();
+//        currentMove = playerOneButton.getText();
+        tc.setPlayers(playerOneButton.getText(), playerTwoButton.getText());
         setStatusLabel();
         nextMove();
     }
@@ -147,30 +149,34 @@ public class TicTacToe extends JFrame {
     }
 
     public void nextMove() {
-        if (currentMove.equals("Robot")) {
-            buttonsMap.get(tc.robotMove()).setText(tc.getLetter());
-            tc.changeMove();
-            changeMove();
+//        if (currentMove.equals("Robot")) {
+        if (tc.getPlayer().equals("Robot")) {
+            String letter = tc.getLetter();
+            buttonsMap.get(tc.robotMove()).setText(letter);
+//            tc.changeMove();
+//            changeMove();
+            setStatusLabel();
             nextMove();
         }
     }
 
     public void changeMove() {
-        currentMove = currentMove.equals(playerOneButton.getText()) ?
-                playerTwoButton.getText() : playerOneButton.getText();
-        System.out.println("current move " + currentMove);
+//        currentMove = currentMove.equals(playerOneButton.getText()) ?
+//                playerTwoButton.getText() : playerOneButton.getText();
         setStatusLabel();
     }
 
 
 
     public void setButtonText(String buttonKey) {
-        if (tc.getStatus().equals("Game in progress") && currentMove.equals("Human")) {
+        if (tc.getStatus().contains("The turn of") && tc.getPlayer().equals("Human")) {
             if (buttonsMap.get(buttonKey).getText().equals(" ")) {
-                buttonsMap.get(buttonKey).setText(tc.makeMove(buttonKey));
-                tc.changeMove();
+                String letter = tc.getLetter();
+                tc.makeMove(buttonKey);
+                buttonsMap.get(buttonKey).setText(letter);
+//                tc.changeMove();
                 setStatusLabel();
-                changeMove();
+//                changeMove();
                 nextMove();
             }
         }
@@ -179,8 +185,7 @@ public class TicTacToe extends JFrame {
     public void setStatusLabel() {
         String status = tc.getStatus();
         statusLabel.setText(status);
-        if (statusLabel.getText().equals("X wins") || statusLabel.getText().equals("O wins")
-                || statusLabel.getText().equals("Draw")) {
+        if (statusLabel.getText().contains("wins") || statusLabel.getText().equals("Draw")) {
             for (Map.Entry<String, JButton> entry : buttonsMap.entrySet()) {
                 entry.getValue().setEnabled(false);
             }
@@ -205,36 +210,36 @@ public class TicTacToe extends JFrame {
     public void menuHandler(String option) {
         switch (option) {
             case "MenuHumanHuman":
-                if (!statusLabel.getText().equals("Game in progress")) {
+//                if (!statusLabel.getText().contains("The turn of")) {
                     resetGame();
                     playerOneButton.setText("Human");
                     playerTwoButton.setText("Human");
                     startGame();
-                }
+//                }
                 break;
             case "MenuHumanRobot":
-                if (!statusLabel.getText().equals("Game in progress")) {
+//                if (!statusLabel.getText().contains("The turn of")) {
                     resetGame();
                     playerOneButton.setText("Human");
                     playerTwoButton.setText("Robot");
                     startGame();
-                }
+//                }
                 break;
             case "MenuRobotHuman":
-                if (!statusLabel.getText().equals("Game in progress")) {
+//                if (!statusLabel.getText().contains("The turn of")) {
                     resetGame();
                     playerOneButton.setText("Robot");
                     playerTwoButton.setText("Human");
                     startGame();
-                }
+//                }
                 break;
             case "MenuRobotRobot":
-                if (!statusLabel.getText().equals("Game in progress")) {
+//                if (!statusLabel.getText().contains("The turn of")) {
                     resetGame();
                     playerOneButton.setText("Robot");
                     playerTwoButton.setText("Robot");
                     startGame();
-                }
+//                }
                 break;
             case "MenuExit":
                 System.exit(0);

@@ -6,6 +6,9 @@ import java.util.stream.Collectors;
 
 public class TGame {
     String currentMove = "X";
+    String currentPlayer;
+    String playerOne;
+    String playerTwo;
     boolean isGameOver = false;
     String gameStatus = "Game is not started";
     Map<String, String> gameField = new LinkedHashMap<String, String>() {{
@@ -19,6 +22,30 @@ public class TGame {
         put("ButtonC2", " ");
         put("ButtonC3", " ");
     }};
+
+    public String getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public String getPlayerOne() {
+        return playerOne;
+    }
+
+    public void setPlayerOne(String playerOne) {
+        this.playerOne = playerOne;
+    }
+
+    public String getPlayerTwo() {
+        return playerTwo;
+    }
+
+    public void setPlayerTwo(String playerTwo) {
+        this.playerTwo = playerTwo;
+    }
+
+    public void setCurrentPlayer(String currentPlayer) {
+        this.currentPlayer = currentPlayer;
+    }
 
     public String getCurrentMove() {
         return currentMove;
@@ -58,6 +85,7 @@ public class TGame {
 
     public void makeMove(String buttonKey) {
         gameField.put(buttonKey, this.currentMove);
+        changeMove();
     }
 
     public List<String> availableMoves(Map<String, String> field) {
@@ -75,18 +103,22 @@ public class TGame {
 
     public void changeMove() {
         this.currentMove = this.currentMove.equals("X") ? "O" : "X";
+        this.currentPlayer = this.currentPlayer.equals(playerOne) ?
+                playerTwo : playerOne;
     }
 
     public String getStatus() {
         if (isPlayerWin(this.gameField, "X")) {
             isGameOver = true;
-            this.gameStatus = "X wins";
-            return "X wins";
+//            this.gameStatus = "X wins";
+//            return "X wins";
+            this.gameStatus = "The " + this.currentPlayer + " Player (X) wins";
+            return this.gameStatus;
         }
         if (isPlayerWin(this.gameField, "O")) {
             isGameOver = true;
-            this.gameStatus = "O wins";
-            return "O wins";
+            this.gameStatus = "The " + this.currentPlayer + " Player (O) wins";
+            return this.gameStatus;
         }
         if (isDraw(this.gameField)) {
             isGameOver = true;
@@ -96,7 +128,7 @@ public class TGame {
         if (gameStatus.equals("Game is not started")) {
             return "Game is not started";
         }
-        return "Game in progress";
+        return "The turn of " + this.currentPlayer + " Player (" + this.currentMove + ")";
     }
 
     public Map<String, String> deepCopy(Map<String, String> original) {
@@ -111,6 +143,7 @@ public class TGame {
     public String computerMove() {
         String move = calcMove();
         gameField.put(move, this.currentMove);
+        changeMove();
         return move;
     }
 

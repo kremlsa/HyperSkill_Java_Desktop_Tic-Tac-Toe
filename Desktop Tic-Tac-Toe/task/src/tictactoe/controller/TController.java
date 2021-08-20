@@ -21,10 +21,8 @@ public class TController {
         this.game = new TGame();
     }
 
-    public String makeMove(String buttonKey) {
-        String move = game.getCurrentMove();
+    public void makeMove(String buttonKey) {
         this.game.makeMove(buttonKey);
-        return game.getCurrentMove();
     }
 
     public void changeMove() {
@@ -37,6 +35,16 @@ public class TController {
 
     public String getLetter() {
         return game.getCurrentMove();
+    }
+
+    public void setPlayers(String playerOne, String playerTwo) {
+        game.setCurrentPlayer(playerOne);
+        game.setPlayerOne(playerOne);
+        game.setPlayerTwo(playerTwo);
+    }
+
+    public String getPlayer() {
+        return this.game.getCurrentPlayer();
     }
 
 }
