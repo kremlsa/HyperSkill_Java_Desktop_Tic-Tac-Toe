@@ -1,5 +1,6 @@
 package tictactoe.controller;
 
+import tictactoe.TicTacToe;
 import tictactoe.model.TGame;
 
 public class TController {
@@ -8,33 +9,29 @@ public class TController {
 
     public String getStatus() {
         return game.getStatus();
-//        if (game.isGameOver()) {
-//            return "GameOver";
-//        } else {
-//            return this.game.getStatus();
-//        }
     }
 
     public void startGame() { this.game.startGame();}
+
+    public void nextMove(TicTacToe view) {
+        if (game.getCurrentPlayer().equals("Robot")) {
+            String letter = game.getCurrentMove();
+            view.setButtonMove(game.computerMove(), letter);
+            view.setStatusLabel();
+            game.changeMove();
+            nextMove(view);
+        }
+    }
 
     public void resetGame() {
         this.game = new TGame();
     }
 
-    public void makeMove(String buttonKey) {
+    public void makeMove(String buttonKey, TicTacToe view) {
+        String letter = game.getCurrentMove();
         this.game.makeMove(buttonKey);
-    }
-
-    public void changeMove() {
-        game.changeMove();
-    }
-
-    public String robotMove() {
-        return game.computerMove();
-    }
-
-    public String getLetter() {
-        return game.getCurrentMove();
+        view.setButtonMove(buttonKey, letter);
+        view.setStatusLabel();
     }
 
     public void setPlayers(String playerOne, String playerTwo) {
@@ -42,9 +39,4 @@ public class TController {
         game.setPlayerOne(playerOne);
         game.setPlayerTwo(playerTwo);
     }
-
-    public String getPlayer() {
-        return this.game.getCurrentPlayer();
-    }
-
 }

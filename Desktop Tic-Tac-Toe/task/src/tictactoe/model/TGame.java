@@ -27,16 +27,8 @@ public class TGame {
         return currentPlayer;
     }
 
-    public String getPlayerOne() {
-        return playerOne;
-    }
-
     public void setPlayerOne(String playerOne) {
         this.playerOne = playerOne;
-    }
-
-    public String getPlayerTwo() {
-        return playerTwo;
     }
 
     public void setPlayerTwo(String playerTwo) {
@@ -75,10 +67,6 @@ public class TGame {
         return false;
     }
 
-    public int countLetter(Map<String, String> field, String letter) {
-        return  Collections.frequency(field.values(), letter);
-    }
-
     public boolean isDraw(Map<String, String> field) {
         return  Collections.frequency(field.values(), " ") == 0;
     }
@@ -110,8 +98,6 @@ public class TGame {
     public String getStatus() {
         if (isPlayerWin(this.gameField, "X")) {
             isGameOver = true;
-//            this.gameStatus = "X wins";
-//            return "X wins";
             this.gameStatus = "The " + this.currentPlayer + " Player (X) wins";
             return this.gameStatus;
         }
@@ -143,17 +129,14 @@ public class TGame {
     public String computerMove() {
         String move = calcMove();
         gameField.put(move, this.currentMove);
-        changeMove();
         return move;
     }
 
     public String calcMove() {
         Random random = new Random();
         String letterInv;
-        //Check if Computer win next move
         Map<String, String> cloneField;
         List<String> moves = availableMoves(gameField);
-        //Check if Computer win next move
         for (String move : moves) {
             cloneField = deepCopy(gameField);
             cloneField.put(move, currentMove);
@@ -171,6 +154,4 @@ public class TGame {
         }
         return moves.get(random.nextInt(moves.size()));
     }
-
-
 }
